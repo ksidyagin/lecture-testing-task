@@ -46,14 +46,14 @@ int main() {
     if (searchIndex != nullptr) {
         std::cout << "Element with index 1 found. The value of element is: " << searchIndex->data << std::endl;
     } else {
-        printf("Element with index 1 not found.\n");
+        std::cout <<  "Element with index 1 not found.\n" << std::endl;
     }
 
     Node* searchIndex2 = stack->searchByIndex(-1);
     if (searchIndex2 != nullptr) {
         std::cout << "Element with index -1 found. The value of element is: " << searchIndex2->data << std::endl;
     } else {
-        printf("Element with index -1 not found.\n");
+        std::cout << "Element with index -1 not found." << std::endl;
     }
 
     delete stack;
