@@ -43,6 +43,7 @@ void Stack::pop()
     if (isEmpty()) return;
     Node *temp = this->top;
     this->top = this->top->next;
+    delete temp;
 }
 
 Node *Stack::searchByValue(int value)
