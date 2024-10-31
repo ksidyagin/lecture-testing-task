@@ -1,0 +1,43 @@
+name: gtest/gbenchmark
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Update packages
+      run: sudo apt-get update
+
+    - name: Install CMake
+      run: sudo apt-get -y install cmake
+
+    - name: Install google_test
+      run: sudo apt-get -y install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo cp lib/*.a /usr/lib && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
+
+    - name: Install google_benchmark
+      run: git clone https://github.com/google/benchmark.git && cd benchmark && cmake -E make_directory "build" && cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ && cmake --build "build" --config Release && sudo cmake --build "build" --config Release --target install
+
+    - name: configure
+      run: cd 05_hw && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Werror" ..
+
+    - name: make
+      run: cd ./05_hw/build && make
+
+    - name: Test Gtest
+      working-directory: ./05_hw/build
+      run: ./gtest_stack
+
+    - name: Test GBenchmark
+      working-directory: ./05_hw/build
+      run: ./benchmark
